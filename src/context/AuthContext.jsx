@@ -5,7 +5,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth, googleProvider } from "../firebase/config";
+import { auth, googleProvider } from "./firebase/config";
 // kustore user logins tusisumbuke kutafuta kwa page zingine
 const Authcontext = createContext(null)
 export function Authprovider ({children}) {
