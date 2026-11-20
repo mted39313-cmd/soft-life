@@ -11,4 +11,4 @@ function ProtectedRoute({ children }) {
   return children;
 }
 // calls lazima tutashika
-export default ProtectedRoute;
+export default ProtectedRoute; 
