@@ -1,10 +1,10 @@
 // props zikona vitu tunahitaji data na kupass down kutoka kwa parent component na kuopen
-function Packagecard({pkg,onSelect}) {
+function PackageCard({pkg,onSelect}) {
 
     function handleBookClick() {
     onSelect(pkg);
-  }
-}
+    }
+
 return (
     <article className="flex flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-950 p-6">
       <div>
@@ -27,5 +27,5 @@ return (
         </button>
       </div>
     </article>
-  );
+  )};
 export default PackageCard;
