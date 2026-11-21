@@ -7,8 +7,8 @@ import {
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase/config";
 // kustore user logins tusisumbuke kutafuta kwa page zingine
-const Authcontext = createContext(null)
-export function Authprovider ({children}) {
+const AuthContext = createContext(null)
+export function AuthProvider ({children}) {
     // ka msee aja login inakua null
     const [user, setUser] = useState(null);
     // inapause app ikiload ndio firebase ione ka kuna msee amekua 
@@ -54,4 +54,5 @@ function loginWithGoogle() {
 export function useAuth() {
   return useContext(AuthContext);
 }
+export default AuthProvider;
     
