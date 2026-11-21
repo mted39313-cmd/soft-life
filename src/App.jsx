@@ -15,7 +15,7 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login />} /> 
             <Route
               path="/admin"
               element={
@@ -23,7 +23,7 @@ function App() {
                   <AdminDashboard />
                 </ProtectedRoute>
               }
-            />
+            /> 
           </Routes>
         </div>
       </BrowserRouter>
