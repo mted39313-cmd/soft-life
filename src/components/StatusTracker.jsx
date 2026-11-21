@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 
 function getBadgeStyle(status) {
@@ -19,6 +19,9 @@ function StatusTracker({ initialBooking, onBookingLoaded, onClear }) {
   const [bookingIdInput, setBookingIdInput] = useState("");
   const [feedback, setFeedback] = useState("");
   const [loadingLookup, setLoadingLookup] = useState(false);
+  const [gpsPinInput, setGpsPinInput] = useState("");
+  const [confirmingArrival, setConfirmingArrival] = useState(false);
+
 
   useEffect(() => {
     setBooking(initialBooking || null);
@@ -69,6 +72,44 @@ function StatusTracker({ initialBooking, onBookingLoaded, onClear }) {
       setLoadingLookup(false);
     }
   }
+  async function handleConfirmArrival(event) {
+  event.preventDefault();
+  if (!booking || !booking.id) return;
+
+  const cleanGpsPin = gpsPinInput.trim();
+  if (!cleanGpsPin) {
+    setFeedback("Weka GPS coordinates au paste Google Maps location pin.");
+    return;
+  }
+
+  setConfirmingArrival(true);
+  setFeedback("");
+
+  try {
+    const arrivedAt = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    await updateDoc(doc(db, "bookings", booking.id), {
+      status: "Arrived - Ready to Release",
+      arrivedAt,
+      gpsPin: cleanGpsPin,
+    });
+
+    setBooking((prev) => ({
+      ...prev,
+      status: "Arrived - Ready to Release",
+      arrivedAt,
+      gpsPin: cleanGpsPin,
+    }));
+    setGpsPinInput("");
+  } catch (err) {
+    setFeedback("Imeshindwa ku-confirm arrival, jaribu tena.");
+  } finally {
+    setConfirmingArrival(false);
+  }
+}
 
   const currentStatus = booking ? booking.status || "Held in Escrow" : "";
 
@@ -135,6 +176,12 @@ function StatusTracker({ initialBooking, onBookingLoaded, onClear }) {
                   STK Ref: {booking.checkoutRequestId}
                 </p>
               )}
+              {booking.arrivedAt && (
+                <p className="mt-0.5 text-xs font-bold text-amber-700">
+                  Arrived at {booking.arrivedAt}
+                  {booking.gpsPin ? ` • GPS Pin: ${booking.gpsPin}` : ""}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
@@ -157,6 +204,28 @@ function StatusTracker({ initialBooking, onBookingLoaded, onClear }) {
               )}
             </div>
           </div>
+          {(booking.status || "Held in Escrow") === "Held in Escrow" && (
+            <form
+              onSubmit={handleConfirmArrival}
+              className="mt-3 flex flex-col gap-2 border-t border-zinc-200 pt-3 sm:flex-row"
+            >
+              <input
+                type="text"
+                value={gpsPinInput}
+                onChange={(e) => setGpsPinInput(e.target.value)}
+                placeholder="Paste GPS Pin (-1.3614, 36.6562 or Maps link)"
+                aria-label="Location GPS Pin"
+                className="flex-1 rounded-sm border border-zinc-300 bg-zinc-50 px-3 py-2 text-xs font-medium text-black outline-none focus:border-black"
+              />
+              <button
+                type="submit"
+                disabled={confirmingArrival}
+                className="rounded-sm bg-emerald-500 px-4 py-2 text-xs font-extrabold uppercase text-black hover:bg-emerald-400 disabled:opacity-50"
+              >
+                {confirmingArrival ? "Confirming..." : "Confirm Arrival"}
+              </button>
+            </form>
+          )}
         </div>
       )}
     </section>
