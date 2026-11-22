@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 
 const STK_ENDPOINT = "http://localhost:5001/api/mpesa/stkpush";
 
+
 // tunatuma request kwa server ya port 5001 ndio tenje ipate M-Pesa STK prompt
 async function sendStkRequest(phone, amount, packageTitle) {
   const response = await fetch(STK_ENDPOINT, {
@@ -26,7 +27,6 @@ async function sendStkRequest(phone, amount, packageTitle) {
 
   return data.checkoutRequestId;
 }
-
 function getPackageFare(pkg) {
   return Number(pkg.price ?? pkg.fare ?? 0);
 }
