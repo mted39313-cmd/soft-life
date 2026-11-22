@@ -9,7 +9,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <div className="min-h-screen bg-zinc-950 text-white">
           <Navbar />
 
