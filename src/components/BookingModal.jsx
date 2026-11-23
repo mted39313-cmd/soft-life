@@ -3,7 +3,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
 
-const STK_ENDPOINT = "http://localhost:5001/api/mpesa/stkpush";
+/*const STK_ENDPOINT = "http://localhost:5001/api/mpesa/stkpush";
 
 
 // tunatuma request kwa server ya port 5001 ndio tenje ipate M-Pesa STK prompt
@@ -26,7 +26,11 @@ async function sendStkRequest(phone, amount, packageTitle) {
   }
 
   return data.checkoutRequestId;
-}
+}*/
+  async function sendStkRequest(phone, amount, packageTitle) {
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  return `ws_CO_${Date.now()}`;
+  }
 function getPackageFare(pkg) {
   return Number(pkg.price ?? pkg.fare ?? 0);
 }
